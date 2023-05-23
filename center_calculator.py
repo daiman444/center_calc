@@ -119,17 +119,41 @@ class Window(QWidget):
         rad = float(self.ln_r.text())
 
         ab = math.sqrt((bx - ax) ** 2 + (by - ay) ** 2)
-        ho = math.sqrt(rad ** 2 - (ab / 2) ** 2)
 
-        o1x = ax + (bx - ax) / 2 + (by - ay) * ho / ab
-        o1y = ay + (by - ay) / 2 - (bx - ax) * ho / ab
-        o2x = ax + (bx - ax) / 2 - (by - ay) * ho / ab
-        o2y = ay + (by - ay) / 2 + (bx - ax) * ho / ab
+        if rad >= 0 and ab >= 0:
+            if rad >= abs(ab/2):
+                ho = math.sqrt(rad ** 2 - (ab / 2) ** 2)
+                if rad == ho * 2:
+                    self.errors('Circles intersect at 1 point')
 
-        self.o1x_out.setText('%s' % round(o1x, 3))
-        self.o1y_out.setText('%s' % round(o1y, 3))
-        self.o2x_out.setText('%s' % round(o2x, 3))
-        self.o2y_out.setText('%s' % round(o2y, 3))
+                elif rad < ho * 2:
+                    o1x = ax + (bx - ax) / 2 + (by - ay) * ho / ab
+                    o1y = ay + (by - ay) / 2 - (bx - ax) * ho / ab
+                    o2x = ax + (bx - ax) / 2 - (by - ay) * ho / ab
+                    o2y = ay + (by - ay) / 2 + (bx - ax) * ho / ab
+
+                    self.o1x_out.setText('%s' % round(o1x, 3))
+                    self.o1y_out.setText('%s' % round(o1y, 3))
+                    self.o2x_out.setText('%s' % round(o2x, 3))
+                    self.o2y_out.setText('%s' % round(o2y, 3))
+
+                else:
+                    self.errors('Circles do not intersect')
+            else:
+                self.errors('Invalid values entered')
+        else:
+            self.errors('Invalid values entered')
+
+    def errors(self, error):
+        self.o1x_out.setText('%s' % error)
+        self.o1y_out.setText('')
+        self.o2x_out.setText('')
+        self.o2y_out.setText('')
+        self.o1x.setText('')
+        self.o1y.setText('')
+        self.o2x.setText('')
+        self.o2y.setText('')
+
 
 
 if __name__ == "__main__":
